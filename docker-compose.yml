@@ -1,0 +1,75 @@
+version: '3.7'
+
+networks:
+  default:
+    driver: bridge
+  traefik-net:
+    name: traefik_net
+    external: true
+
+volumes:
+  mysql_data: {}
+
+services:
+  web:
+    container_name: "${PROJECT_NAME}-web"
+    image: nginx:mainline-alpine
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./:/srv/app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${PROJECT_NAME}-web.rule=Host(`${PROJECT_HOST}`)"
+      - "traefik.http.routers.${PROJECT_NAME}-web.entrypoints=web"
+      - "traefik.docker.network=traefik_net"
+    networks:
+      - default
+      - traefik-net
+
+#  php:
+#    build:
+#      context: ./docker/php-fpm
+#    volumes:
+#      - ./:/srv/app
+#      - ./docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+#    networks:
+#      - default
+#      - traefik-net
+#    labels:
+#      - "traefik.enable=false"
+#
+#  mysql:
+#    image: mysql:latest
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+#      MYSQL_USER: ${DB_USER}
+#      MYSQL_PASSWORD: ${DB_PASS}
+#      MYSQL_DATABASE: ${DB_NAME}
+#    volumes:
+#      - mysqldata:/var/lib/mysql
+#    ports:
+#      - "${DB_PORT}:3306"
+#    networks:
+#      - default
+#    labels:
+#      - "traefik.enable=false"
+#
+#  phpmyadmin:
+#    image: phpmyadmin:5.2
+#    links:
+#      - mysql
+#    environment:
+#      PMA_HOST: ${DB_HOST}
+#      PMA_PORT: ${DB_PORT}
+#      PMA_ARBITRARY: 1
+#      PMA_USER: ${DB_USER}
+#      PMA_PASSWORD: ${DB_PASS}
+#      PMA_ABSOLUTE_URI: "http://${PHPMYADMIN_HOST}/"
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.docker.network=traefik_net"
+#      - "traefik.http.routers.${PROJECT}-phpmyadmin.rule=Host(`${PHPMYADMIN_HOST}`)"
+#      - "traefik.http.routers.${PROJECT}-phpmyadmin.entrypoints=web"
+#    networks:
+#      - default
+#      - traefik-net
