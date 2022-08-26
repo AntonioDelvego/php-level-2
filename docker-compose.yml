@@ -26,50 +26,52 @@ services:
       - default
       - traefik-net
 
-#  php:
-#    build:
-#      context: ./docker/php-fpm
-#    volumes:
-#      - ./:/srv/app
-#      - ./docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
-#    networks:
-#      - default
-#      - traefik-net
-#    labels:
-#      - "traefik.enable=false"
-#
-#  mysql:
-#    image: mysql:latest
-#    environment:
-#      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
-#      MYSQL_USER: ${DB_USER}
-#      MYSQL_PASSWORD: ${DB_PASS}
-#      MYSQL_DATABASE: ${DB_NAME}
-#    volumes:
-#      - mysqldata:/var/lib/mysql
-#    ports:
-#      - "${DB_PORT}:3306"
-#    networks:
-#      - default
-#    labels:
-#      - "traefik.enable=false"
-#
-#  phpmyadmin:
-#    image: phpmyadmin:5.2
-#    links:
-#      - mysql
-#    environment:
-#      PMA_HOST: ${DB_HOST}
-#      PMA_PORT: ${DB_PORT}
-#      PMA_ARBITRARY: 1
-#      PMA_USER: ${DB_USER}
-#      PMA_PASSWORD: ${DB_PASS}
-#      PMA_ABSOLUTE_URI: "http://${PHPMYADMIN_HOST}/"
-#    labels:
-#      - "traefik.enable=true"
-#      - "traefik.docker.network=traefik_net"
-#      - "traefik.http.routers.${PROJECT}-phpmyadmin.rule=Host(`${PHPMYADMIN_HOST}`)"
-#      - "traefik.http.routers.${PROJECT}-phpmyadmin.entrypoints=web"
-#    networks:
-#      - default
-#      - traefik-net
+  php:
+    container_name: "${PROJECT_NAME}-php"
+    build:
+      context: ./docker/php-fpm
+    volumes:
+      - ./:/srv/app
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+    networks:
+      - default
+    labels:
+      - "traefik.enable=false"
+
+  mysql:
+    container_name: "${PROJECT_NAME}-mysql"
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "${DB_LOCALHOST_PORT}:${DB_PORT}"
+    networks:
+      - default
+    labels:
+      - "traefik.enable=false"
+
+  phpmyadmin:
+    container_name: "${PROJECT_NAME}-pma"
+    image: phpmyadmin:5.2
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: ${DB_HOST}
+      PMA_PORT: ${DB_PORT}
+      PMA_ARBITRARY: 1
+      PMA_USER: ${DB_USER}
+      PMA_PASSWORD: ${DB_PASS}
+      PMA_ABSOLUTE_URI: "http://${PHPMYADMIN_HOST}/"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik_net"
+      - "traefik.http.routers.${PROJECT_NAME}-pma.rule=Host(`${PHPMYADMIN_HOST}`)"
+      - "traefik.http.routers.${PROJECT_NAME}-pma.entrypoints=web"
+    networks:
+      - default
+      - traefik-net
