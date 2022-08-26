@@ -1,0 +1,17 @@
+{
+    "name": "delvego/php-upper",
+    "description": "learn php",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Delvego\\PhpUpper\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "AntonioDelvego"
+        }
+    ],
+    "require": {}
+}
