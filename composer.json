@@ -13,5 +13,7 @@
             "name": "AntonioDelvego"
         }
     ],
-    "require": {}
+    "require": {
+        "fakerphp/faker": "^1.20"
+    }
 }

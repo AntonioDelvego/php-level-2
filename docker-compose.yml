@@ -1,5 +1,11 @@
 version: '3.7'
 
+x-build-args:
+  &build-args
+  args:
+    - USER=${USER}
+
+
 networks:
   default:
     driver: bridge
@@ -29,6 +35,7 @@ services:
   php:
     container_name: "${PROJECT_NAME}-php"
     build:
+      <<: *build-args
       context: ./docker/php-fpm
     volumes:
       - ./:/srv/app
