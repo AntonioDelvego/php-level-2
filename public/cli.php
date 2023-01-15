@@ -1,14 +1,18 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
-use Delvego\PhpUpper\User;
-use Delvego\PhpUpper\Blog;
-use Delvego\PhpUpper\Comment;
+use Delvego\PhpUpper\Models\Blog;
+use Delvego\PhpUpper\Models\Comment;
+use Delvego\PhpUpper\Models\User;
 use Faker\Factory;
 
 $faker = Factory::create();
 
-switch ($argv[1]) {
+$commandArgs = array_slice($argv, 1);
+
+$selectedClass = array_shift($commandArgs);
+
+switch ($selectedClass) {
     case "user":
         $user = new User($faker->randomDigitNotZero(), $faker->firstName(), $faker->lastName());
         echo $user . "\n";
@@ -23,10 +27,4 @@ switch ($argv[1]) {
         break;
     default:
         echo "available commands => user, comment, blog" . "\n";
-}
-
-if (array_key_exists(1, $argv)) {
-    echo $argv[1] . "\n";
-} else {
-    echo "no param" . "\n";
 }
