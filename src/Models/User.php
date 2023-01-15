@@ -1,6 +1,6 @@
 <?php
 
-namespace Delvego\PhpUpper;
+namespace Delvego\PhpUpper\Models;
 
 class User
 {
