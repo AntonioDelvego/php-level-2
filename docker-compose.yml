@@ -1,7 +1,6 @@
 version: '3.7'
 
-x-build-args:
-  &build-args
+x-build-args: &build-args
   args:
     - USER=${USER}
 
@@ -17,16 +16,16 @@ volumes:
   mysql_data: {}
 
 services:
-  web:
-    container_name: "${PROJECT_NAME}-web"
+  nginx:
+    container_name: "${PROJECT_NAME}-nginx"
     image: nginx:mainline-alpine
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
       - ./:/srv/app
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.${PROJECT_NAME}-web.rule=Host(`${PROJECT_HOST}`)"
-      - "traefik.http.routers.${PROJECT_NAME}-web.entrypoints=web"
+      - "traefik.http.routers.${PROJECT_NAME}-nginx.rule=Host(`${PROJECT_HOST}`)"
+      - "traefik.http.routers.${PROJECT_NAME}-nginx.entrypoints=web"
       - "traefik.docker.network=traefik_net"
     networks:
       - default
