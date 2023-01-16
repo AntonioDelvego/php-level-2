@@ -1,25 +1,25 @@
 <?php
 
-namespace Delvego\PhpUpper\Models;
+namespace Delvego\PhpUpper\Models\Blog;
 
-class Comment
+class Post
 {
     /**
      * @param string $id
-     * @param string $author_id
-     * @param string $blog_id
+     * @param string $authorId
+     * @param string $title
      * @param string $text
      */
     public function __construct(
         private readonly string $id,
-        private readonly string $author_id,
-        private readonly string $blog_id,
+        private readonly string $authorId,
+        private readonly string $title,
         private readonly string $text,
     ){}
 
     public function __toString(): string
     {
-        return "$this->author_id says => $this->text";
+        return "$this->title: $this->text";
     }
 
     /**
@@ -35,15 +35,15 @@ class Comment
      */
     public function getAuthorId(): string
     {
-        return $this->author_id;
+        return $this->authorId;
     }
 
     /**
      * @return string
      */
-    public function getBlogId(): string
+    public function getTitle(): string
     {
-        return $this->blog_id;
+        return $this->title;
     }
 
     /**
